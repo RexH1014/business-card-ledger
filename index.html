@@ -37922,7 +37922,7 @@ var FIELDS = [
     key: "fullName",
     excel: "Full Name",
     zh: "\u59D3\u540D",
-    placeholder: "\u9673\u5927\u6587\nTai Man Chan",
+    placeholder: "\u4E2D\u6587\u6216\u82F1\u6587\u7686\u53EF",
     aliases: ["fullname", "name", "\u59D3\u540D", "\u540D\u5B57"],
     width: 19.75,
     align: "center",
@@ -38493,14 +38493,14 @@ function sampleCards() {
 // src/lib/scan-card.ts
 var COMPANY = /有限公司|股份有限|集團|(?:^|[\s\u4e00-\u9fff])公司(?:$|[\s\u4e00-\u9fff])|Limited|Ltd\.?|\bLLC\b|\bLLP\b|\bPLC\b|Company|Holdings|\bGroup\b|Corporation|\bInc\.?\b|Pte\.?/i;
 var TITLE = /\b(?:director|manager|officer|president|partner|consultant|engineer|designer|accountant|lawyer|solicitor|counsel|chief|head|vice|assistant|executive|founder|chairman|chairperson|secretary|coordinator|specialist|analyst|advisor|adviser|representative|supervisor|developer|architect|associate|principal|general)\b|董事|經理|總監|主任|總裁|會長|主席|合夥人|合伙人|顧問|工程師|設計師|會計師|律師|秘書|主管|創辦人|負責人|專員|分析師|代表|助理|總經理|副總/i;
-var ZH_NAME = /^[\u4e00-\u9fff·．.]{2,5}$/;
-var EN_NAME = /^(?:[A-Z][a-z]+|[A-Z]{2,})(?:[ .'-](?:[A-Z][a-z]+|[A-Z]{2,})){1,3}$/;
+var EN_TOKEN = "[A-Za-z](?:[A-Za-z'\u2019\\-]*[A-Za-z])?\\.?";
+var EN_NAME_LINE = new RegExp(`^${EN_TOKEN}(?:[ .,-]+${EN_TOKEN}){0,5}$`);
 var NOT_NAME = /* @__PURE__ */ new Set(["\u9999\u6E2F", "\u4E2D\u570B", "\u4E5D\u9F8D", "\u65B0\u754C", "\u53F0\u7063", "\u81FA\u7063", "\u6FB3\u9580", "\u5730\u5740", "\u96FB\u8A71", "\u96FB\u90F5", "\u50B3\u771F", "\u624B\u6A5F", "\u516C\u53F8", "\u59D3\u540D", "\u4E2D\u74B0"]);
 var LABEL = /^(?:e-?mail|email|mail|電郵|郵件|tel(?:ephone)?|phone|mobile|cell|mob|fax|傳真|電話|手機|直線|website|web|url|地址|address|name|姓名|職銜|職位|title|company|公司)\s*[:：.]?\s*/i;
 var EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 var PHONE = /(?:\+|00)?\(?852\)?[\s.-]?\d{4}[\s.-]?\d{4}|\(?852\)?[\s.-]?\d{8}|\b[2-9]\d{3}[\s.-]\d{4}\b|\b[2-9]\d{7}\b/g;
 function tighten(text) {
-  return text.replace(/[\uFF10-\uFF19]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - 65296 + 48)).replace(/([\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])/g, "$1").replace(/\u00a0/g, " ");
+  return text.replace(/[\uFF10-\uFF19]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - 65296 + 48)).replace(/([\u4e00-\u9fff])[^\S\n]+(?=[\u4e00-\u9fff])/g, "$1").replace(/\u00a0/g, " ");
 }
 function linesOf(text) {
   return tighten(text).split(/\r?\n/).map((line) => line.replace(/\s+/g, " ").trim()).filter((line) => line.length > 1);
@@ -38516,25 +38516,34 @@ function unique(values) {
   }
   return result;
 }
-function englishName(line) {
-  const match = line.match(/(?:[A-Z][a-z]+|[A-Z]{2,})(?:[ .'-](?:[A-Z][a-z]+|[A-Z]{2,})){1,3}/);
-  if (!match) return null;
-  const name = match[0].trim();
-  if (!EN_NAME.test(name) || TITLE.test(name) || /hong kong|kowloon|macau|china/i.test(name)) return null;
-  return name;
+function personName(line) {
+  const value = line.trim();
+  if (isChineseName(value) || isEnglishName(value)) return value;
+  const english = value.replace(/[\u4e00-\u9fff·．.]+/g, " ").replace(/[/／,，]+/g, " ").replace(/\s+/g, " ").trim();
+  const chinese = value.replace(/[A-Za-z][A-Za-z.'’\-]*/g, " ").replace(/[·．.\s,，/／-]+/g, "");
+  if (isEnglishName(english) && isChineseName(chinese)) return value;
+  return null;
 }
-function chineseName(line) {
-  const match = line.match(/[\u4e00-\u9fff]{2,5}/);
-  if (!match || NOT_NAME.has(match[0]) || COMPANY.test(match[0])) return null;
-  return match[0];
+function isChineseName(line) {
+  const compact = line.replace(/[·．.\s]/g, "");
+  if (!/^[\u4e00-\u9fff]{2,8}$/.test(compact)) return false;
+  if (/這|沒有|聯絡|方法|地址|空白|便條|電話|傳真|郵件/.test(compact)) return false;
+  return !NOT_NAME.has(compact) && !COMPANY.test(compact);
+}
+function isEnglishName(line) {
+  const value = line.replace(/,/g, " ").replace(/\s+/g, " ").trim();
+  if (!EN_NAME_LINE.test(value)) return false;
+  if (/hong kong|kowloon|macau|macao|new territories|^china$|^central$/i.test(value)) return false;
+  const words = value.split(/[^A-Za-z]+/).filter((word) => word.length >= 2);
+  if (words.length === 0) return false;
+  return !words.every((word) => TITLE.test(word));
 }
 function draftFromCardText(text, date = todayInHongKong()) {
   const draft = emptyDraft(date);
   const remarks = [];
   const companies = [];
   const titles = [];
-  const chineseNames = [];
-  const englishNames = [];
+  const names = [];
   const phones = [];
   const emails = [];
   for (const original of linesOf(text)) {
@@ -38570,19 +38579,9 @@ function draftFromCardText(text, date = todayInHongKong()) {
       titles.push(line);
       continue;
     }
-    const chinese = chineseName(line);
-    const english = englishName(line);
-    if (chinese && english) {
-      chineseNames.push(chinese);
-      englishNames.push(english);
-      continue;
-    }
-    if (chinese && ZH_NAME.test(line.replace(/[·．.]/g, ""))) {
-      chineseNames.push(chinese);
-      continue;
-    }
-    if (english && EN_NAME.test(line)) {
-      englishNames.push(english);
+    const name = personName(line);
+    if (name) {
+      names.push(name);
       continue;
     }
     remarks.push(line);
@@ -38591,13 +38590,12 @@ function draftFromCardText(text, date = todayInHongKong()) {
   draft.contact = unique(phones).join(" / ");
   draft.company = companies.slice(0, 2).join("\n");
   draft.title = titles[0] ?? "";
-  draft.fullName = [chineseNames[0], englishNames[0]].filter(Boolean).join("\n");
+  draft.fullName = unique(names).slice(0, 3).join("\n");
   draft.remarks = unique([
     ...emails.slice(1),
     ...companies.slice(2),
     ...titles.slice(1),
-    ...chineseNames.slice(1),
-    ...englishNames.slice(1),
+    ...names.slice(3),
     ...remarks
   ]).join("\n");
   return draft;
