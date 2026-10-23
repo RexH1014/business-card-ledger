@@ -56943,9 +56943,6 @@ function Ledger() {
   const [draft, setDraft] = (0, import_react6.useState)(() => emptyDraft());
   const [keepContext, setKeepContext] = (0, import_react6.useState)(true);
   const [formNotice, setFormNotice] = (0, import_react6.useState)(null);
-  const [batchOpen, setBatchOpen] = (0, import_react6.useState)(false);
-  const [batchText, setBatchText] = (0, import_react6.useState)("");
-  const [batchNotice, setBatchNotice] = (0, import_react6.useState)(null);
   const [query, setQuery] = (0, import_react6.useState)("");
   const [category, setCategory] = (0, import_react6.useState)("");
   const [company, setCompany] = (0, import_react6.useState)("");
@@ -56994,7 +56991,6 @@ function Ledger() {
   const filtered = query.trim().length > 0 || category.length > 0 || company.length > 0;
   const packDirty = filePack !== null && JSON.stringify(cards) !== packBaseline;
   const paged = (0, import_react6.useMemo)(() => pageSlice(visible, page, LIST_PAGE_SIZE), [visible, page]);
-  const batch = (0, import_react6.useMemo)(() => parseBatch(batchText), [batchText]);
   function addDrafts(incoming) {
     const existing = new Set(cards.map((card) => cardKey(card)));
     const added = [];
@@ -57036,22 +57032,6 @@ function Ledger() {
       } : emptyDraft()
     );
     nameRef.current?.focus();
-  }
-  function submitBatch(event) {
-    event.preventDefault();
-    if (batch.drafts.length === 0) {
-      setBatchNotice({
-        tone: "error",
-        text: batch.errors[0] ? `\u7B2C ${batch.errors[0].line} \u884C\uFF1A${batch.errors[0].message}` : "\u5148\u8CBC\u4E0A\u540D\u7247\u8CC7\u6599\u3002"
-      });
-      return;
-    }
-    const { added, skipped } = addDrafts(batch.drafts);
-    const parts = [`\u5DF2\u52A0\u5165 ${added.length} \u5F35`];
-    if (skipped) parts.push(`\u7565\u904E ${skipped} \u5F35\u91CD\u8907`);
-    if (batch.errors.length) parts.push(`${batch.errors.length} \u884C\u672A\u52A0\u5165`);
-    setBatchNotice({ tone: added.length ? "ok" : "warn", text: `${parts.join("\uFF0C")}\u3002` });
-    if (added.length > 0) setBatchText("");
   }
   function openEdit(card) {
     setEditing(card);
@@ -57277,83 +57257,6 @@ function Ledger() {
             ]
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("section", { className: "overflow-hidden rounded-lg bg-card text-card-foreground shadow-[0_10px_28px_rgba(0,50,42,0.16)] ring-1 ring-white/40", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "h-1.5 bg-[#00AC92]" }),
-          /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "p-4 sm:p-5", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex items-center justify-between gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("h2", { className: "text-sm font-medium", children: "\u4E00\u6B21\u8CBC\u4E0A\u591A\u5F35" }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Button3, { type: "button", variant: "ghost", size: "sm", onClick: () => setBatchOpen((open3) => !open3), children: batchOpen ? "\u6536\u8D77" : "\u6253\u958B" })
-            ] }),
-            batchOpen ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("form", { onSubmit: submitBatch, className: "mt-3 grid gap-3", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-sm leading-6 text-muted-foreground", children: [
-                "\u4E00\u884C\u4E00\u5F35\uFF0C\u7528\u76F4\u7DDA ",
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-foreground", children: "|" }),
-                " \u6309\u9019\u500B\u6B21\u5E8F\u5206\u958B\u3002\u65E5\u671F\u7559\u7A7A\u5C31\u7559\u7A7A\u3002\u985E\u5225\u6216\u516C\u53F8\u7559\u7A7A\u6703\u6CBF\u7528\u4E0A\u4E00\u884C\uFF1B\u63DB\u4E86\u65B0\u985E\u5225\u800C\u516C\u53F8\u7559\u7A7A\uFF0C\u5C31\u4E0D\u6703\u6CBF\u7528\u4E0A\u4E00\u9593\u516C\u53F8\u3002"
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("ol", { className: "flex flex-wrap gap-1.5", children: FIELDS.map((field, index) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("li", { className: "rounded-full bg-secondary px-2 py-0.5 text-[11px] text-secondary-foreground", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-muted-foreground", children: index + 1 }),
-                " ",
-                field.framed ? field.zh : `\u5176\u4ED6\u4E8B\u9805\xB7${field.zh}`
-              ] }, field.key)) }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
-                Textarea,
-                {
-                  value: batchText,
-                  onChange: (event) => {
-                    setBatchText(event.target.value);
-                    setBatchNotice(null);
-                  },
-                  rows: 5,
-                  placeholder: "HR Service | \u7BC4\u4F8B\u516C\u53F8 | \u9673\u5927\u6587 / Tai Man Chan | Director | 3188 8333 | tai.man@example.com | 29 Jul 2025 | | | | |",
-                  className: "min-h-28 bg-white font-mono text-[13px] placeholder:text-[#6f8f88]",
-                  "aria-label": "\u4E00\u6B21\u8CBC\u4E0A\u591A\u5F35\u540D\u7247"
-                }
-              ),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex flex-wrap gap-2", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Button3, { type: "submit", disabled: batch.drafts.length === 0, children: batch.drafts.length > 0 ? `\u52A0\u5165\u9019 ${batch.drafts.length} \u5F35` : "\u52A0\u5165\u9019\u4E9B\u540D\u7247" }),
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
-                  Button3,
-                  {
-                    type: "button",
-                    variant: "outline",
-                    onClick: () => {
-                      setBatchText(SAMPLE_BATCH);
-                      setBatchNotice(null);
-                    },
-                    children: "\u586B\u5165\u4F8B\u5B50"
-                  }
-                )
-              ] }),
-              batchText.trim() ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "grid gap-1 text-sm", children: [
-                batch.drafts.slice(0, 6).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-foreground", children: [
-                  cardLabel(item),
-                  item.company && item.fullName ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("span", { className: "text-muted-foreground", children: [
-                    " \xB7 ",
-                    item.company
-                  ] }) : null
-                ] }, `${item.fullName}-${item.company}-${index}`)),
-                batch.drafts.length > 6 ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-muted-foreground", children: [
-                  "\u53E6\u5916 ",
-                  batch.drafts.length - 6,
-                  " \u5F35"
-                ] }) : null,
-                batch.errors.map((error) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-[#b42318]", children: [
-                  "\u7B2C ",
-                  error.line,
-                  " \u884C\uFF1A",
-                  error.message
-                ] }, `${error.line}-${error.message}`)),
-                batch.warnings.map((warning) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-[#8a5a12]", children: [
-                  "\u7B2C ",
-                  warning.line,
-                  " \u884C\uFF1A",
-                  warning.message
-                ] }, `${warning.line}-${warning.message}`))
-              ] }) : null,
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(NoticeLine, { notice: batchNotice })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "mt-2 text-sm leading-6 text-muted-foreground", children: "\u5F9E\u8A18\u4E8B\u6216\u8A66\u7B97\u8868\u8CBC\u4E0A\u591A\u884C\uFF0C\u6B04\u4F4D\u7528 | \u6216 Tab \u5206\u958B\u3002\u4E5F\u53EF\u4EE5\u5BEB\u6210\u300C\u59D3\u540D\uFF1A\u9673\u5927\u6587\u300D\u3002" })
-          ] })
-        ] }),
         /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("section", { className: "overflow-hidden rounded-lg bg-card text-card-foreground shadow-[0_10px_28px_rgba(0,50,42,0.16)] ring-1 ring-white/40", children: [
           /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "h-1.5 bg-[#00AC92]" }),
           /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "grid gap-3 p-4 sm:p-5", children: [
