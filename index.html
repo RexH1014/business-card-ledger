@@ -56656,6 +56656,50 @@ function sheetDate(iso) {
   if (!match) return null;
   return new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12));
 }
+function isSheetDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+function earliestDate(cards) {
+  let earliest = "";
+  for (const card of cards) {
+    if (!isSheetDate(card.date)) continue;
+    if (!earliest || card.date < earliest) earliest = card.date;
+  }
+  return earliest;
+}
+function orderCardsForExport(cards) {
+  const groups = [];
+  const byCategory = /* @__PURE__ */ new Map();
+  cards.forEach((card, index) => {
+    const key = card.category.trim();
+    const group = byCategory.get(key);
+    if (group) {
+      group.cards.push(card);
+      return;
+    }
+    const created = { cards: [card], first: index };
+    byCategory.set(key, created);
+    groups.push(created);
+  });
+  groups.sort((left, right) => {
+    const leftDate = earliestDate(left.cards);
+    const rightDate = earliestDate(right.cards);
+    if (leftDate && rightDate && leftDate !== rightDate) return leftDate < rightDate ? -1 : 1;
+    if (leftDate && !rightDate) return -1;
+    if (!leftDate && rightDate) return 1;
+    return left.first - right.first;
+  });
+  return groups.flatMap(
+    (group) => group.cards.map((card, index) => ({ card, index })).sort((left, right) => {
+      const leftDate = isSheetDate(left.card.date) ? left.card.date : "";
+      const rightDate = isSheetDate(right.card.date) ? right.card.date : "";
+      if (leftDate && rightDate && leftDate !== rightDate) return leftDate < rightDate ? -1 : 1;
+      if (leftDate && !rightDate) return -1;
+      if (!leftDate && rightDate) return 1;
+      return left.index - right.index;
+    }).map((item) => item.card)
+  );
+}
 function adjacentSpans(values) {
   const spans = values.map(() => 1);
   let index = 0;
@@ -56724,6 +56768,7 @@ function bannerRow(value, style) {
   return row;
 }
 function workbookRows(cards, updatedOn = todayInHongKong()) {
+  cards = orderCardsForExport(cards);
   const title = bannerRow(SHEET_TITLE, {
     fontSize: 16,
     fontWeight: "bold",
