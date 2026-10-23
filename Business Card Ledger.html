@@ -15937,7 +15937,7 @@ var require_use_sync_external_store_shim_production = __commonJS({
     }
     var objectIs = "function" === typeof Object.is ? Object.is : is;
     var useState12 = React62.useState;
-    var useEffect10 = React62.useEffect;
+    var useEffect11 = React62.useEffect;
     var useLayoutEffect2 = React62.useLayoutEffect;
     var useDebugValue2 = React62.useDebugValue;
     function useSyncExternalStore$2(subscribe, getSnapshot) {
@@ -15950,7 +15950,7 @@ var require_use_sync_external_store_shim_production = __commonJS({
         },
         [subscribe, value, getSnapshot]
       );
-      useEffect10(
+      useEffect11(
         function() {
           checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           return subscribe(function() {
@@ -16004,7 +16004,7 @@ var require_with_selector_production = __commonJS({
     var objectIs = "function" === typeof Object.is ? Object.is : is;
     var useSyncExternalStore3 = shim.useSyncExternalStore;
     var useRef23 = React62.useRef;
-    var useEffect10 = React62.useEffect;
+    var useEffect11 = React62.useEffect;
     var useMemo14 = React62.useMemo;
     var useDebugValue2 = React62.useDebugValue;
     exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
@@ -16048,7 +16048,7 @@ var require_with_selector_production = __commonJS({
         [getSnapshot, getServerSnapshot, selector, isEqual]
       );
       var value = useSyncExternalStore3(subscribe, instRef[0], instRef[1]);
-      useEffect10(
+      useEffect11(
         function() {
           inst.hasValue = true;
           inst.value = value;
@@ -16963,27 +16963,27 @@ async function fetchData(url, type = "text") {
     return response.text();
   }
   return new Promise((resolve, reject) => {
-    const request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = type;
-    request.onreadystatechange = () => {
-      if (request.readyState !== XMLHttpRequest.DONE) {
+    const request2 = new XMLHttpRequest();
+    request2.open("GET", url, true);
+    request2.responseType = type;
+    request2.onreadystatechange = () => {
+      if (request2.readyState !== XMLHttpRequest.DONE) {
         return;
       }
-      if (request.status === 200 || request.status === 0) {
+      if (request2.status === 200 || request2.status === 0) {
         switch (type) {
           case "arraybuffer":
           case "blob":
           case "json":
-            resolve(request.response);
+            resolve(request2.response);
             return;
         }
-        resolve(request.responseText);
+        resolve(request2.responseText);
         return;
       }
-      reject(new Error(request.statusText));
+      reject(new Error(request2.statusText));
     };
-    request.send(null);
+    request2.send(null);
   });
 }
 var PageViewport = class _PageViewport {
@@ -21612,8 +21612,8 @@ var FontLoader = class {
         return;
       }
       await new Promise((resolve) => {
-        const request = this._queueLoadingCallback(resolve);
-        this._prepareFontLoadEvent(font, request);
+        const request2 = this._queueLoadingCallback(resolve);
+        this._prepareFontLoadEvent(font, request2);
       });
     }
   }
@@ -21632,8 +21632,8 @@ var FontLoader = class {
   }
   _queueLoadingCallback(callback) {
     function completeRequest() {
-      assert(!request.done, "completeRequest() cannot be called twice.");
-      request.done = true;
+      assert(!request2.done, "completeRequest() cannot be called twice.");
+      request2.done = true;
       while (loadingRequests.length > 0 && loadingRequests[0].done) {
         const otherRequest = loadingRequests.shift();
         setTimeout(otherRequest.callback, 0);
@@ -21642,19 +21642,19 @@ var FontLoader = class {
     const {
       loadingRequests
     } = this;
-    const request = {
+    const request2 = {
       done: false,
       complete: completeRequest,
       callback
     };
-    loadingRequests.push(request);
-    return request;
+    loadingRequests.push(request2);
+    return request2;
   }
   get _loadTestFont() {
     const testFont = atob("T1RUTwALAIAAAwAwQ0ZGIDHtZg4AAAOYAAAAgUZGVE1lkzZwAAAEHAAAABxHREVGABQAFQAABDgAAAAeT1MvMlYNYwkAAAEgAAAAYGNtYXABDQLUAAACNAAAAUJoZWFk/xVFDQAAALwAAAA2aGhlYQdkA+oAAAD0AAAAJGhtdHgD6AAAAAAEWAAAAAZtYXhwAAJQAAAAARgAAAAGbmFtZVjmdH4AAAGAAAAAsXBvc3T/hgAzAAADeAAAACAAAQAAAAEAALZRFsRfDzz1AAsD6AAAAADOBOTLAAAAAM4KHDwAAAAAA+gDIQAAAAgAAgAAAAAAAAABAAADIQAAAFoD6AAAAAAD6AABAAAAAAAAAAAAAAAAAAAAAQAAUAAAAgAAAAQD6AH0AAUAAAKKArwAAACMAooCvAAAAeAAMQECAAACAAYJAAAAAAAAAAAAAQAAAAAAAAAAAAAAAFBmRWQAwAAuAC4DIP84AFoDIQAAAAAAAQAAAAAAAAAAACAAIAABAAAADgCuAAEAAAAAAAAAAQAAAAEAAAAAAAEAAQAAAAEAAAAAAAIAAQAAAAEAAAAAAAMAAQAAAAEAAAAAAAQAAQAAAAEAAAAAAAUAAQAAAAEAAAAAAAYAAQAAAAMAAQQJAAAAAgABAAMAAQQJAAEAAgABAAMAAQQJAAIAAgABAAMAAQQJAAMAAgABAAMAAQQJAAQAAgABAAMAAQQJAAUAAgABAAMAAQQJAAYAAgABWABYAAAAAAAAAwAAAAMAAAAcAAEAAAAAADwAAwABAAAAHAAEACAAAAAEAAQAAQAAAC7//wAAAC7////TAAEAAAAAAAABBgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAD/gwAyAAAAAQAAAAAAAAAAAAAAAAAAAAABAAQEAAEBAQJYAAEBASH4DwD4GwHEAvgcA/gXBIwMAYuL+nz5tQXkD5j3CBLnEQACAQEBIVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYAAABAQAADwACAQEEE/t3Dov6fAH6fAT+fPp8+nwHDosMCvm1Cvm1DAz6fBQAAAAAAAABAAAAAMmJbzEAAAAAzgTjFQAAAADOBOQpAAEAAAAAAAAADAAUAAQAAAABAAAAAgABAAAAAAAAAAAD6AAAAAAAAA==");
     return shadow(this, "_loadTestFont", testFont);
   }
-  _prepareFontLoadEvent(font, request) {
+  _prepareFontLoadEvent(font, request2) {
     function int32(data2, offset) {
       return data2.charCodeAt(offset) << 24 | data2.charCodeAt(offset + 1) << 16 | data2.charCodeAt(offset + 2) << 8 | data2.charCodeAt(offset + 3) & 255;
     }
@@ -21715,7 +21715,7 @@ var FontLoader = class {
     this._document.body.append(div);
     isFontReady(loadTestFontId, () => {
       div.remove();
-      request.complete();
+      request2.complete();
     });
   }
 };
@@ -38413,7 +38413,7 @@ function createId() {
 function toCard(draft, now = (/* @__PURE__ */ new Date()).toISOString()) {
   const cleaned = emptyDraft(draft.date);
   for (const key of FIELD_KEYS) cleaned[key] = cleanField(draft[key]);
-  return { ...cleaned, id: createId(), createdAt: now };
+  return { ...cleaned, id: createId(), createdAt: now, updatedAt: now };
 }
 function cardsFromUnknown(value) {
   if (!Array.isArray(value)) return [];
@@ -38431,7 +38431,8 @@ function coerceCard(value) {
     const note = `\u5982\u4F55\u53D6\u5F97\uFF1A${source}`;
     draft.remarks = draft.remarks.includes(note) ? draft.remarks : [draft.remarks, note].filter(Boolean).join("\n");
   }
-  return { ...draft, id: record.id, createdAt: record.createdAt };
+  const updatedAt = typeof record.updatedAt === "string" && record.updatedAt ? record.updatedAt : record.createdAt;
+  return { ...draft, id: record.id, createdAt: record.createdAt, updatedAt };
 }
 function readStored(key) {
   const raw = window.localStorage.getItem(key);
@@ -56826,9 +56827,6 @@ function workbookFileName(now = /* @__PURE__ */ new Date()) {
 
 // src/lib/file-pack.ts
 var SNAPSHOT_ID = "mingpian-snapshot";
-function serializeSnapshot(snapshot) {
-  return JSON.stringify(snapshot).replace(/</g, "\\u003c");
-}
 function parseSnapshot(raw) {
   try {
     const parsed = JSON.parse(raw);
@@ -56878,32 +56876,102 @@ function packLogoSrc() {
   if (typeof window !== "undefined" && window.__MINGPIAN_LOGO__) return window.__MINGPIAN_LOGO__;
   return "/henderson-land.png";
 }
-function buildPackHtml(cards) {
-  const next = {
-    fileId: createId(),
-    savedAt: (/* @__PURE__ */ new Date()).toISOString(),
-    cards
-  };
-  const clone = document.documentElement.cloneNode(true);
-  const root2 = clone.querySelector("#root");
-  if (root2) root2.replaceChildren();
-  const node = clone.querySelector(`#${SNAPSHOT_ID}`);
-  if (!node) throw new Error("\u9019\u4EFD\u6A94\u6848\u7F3A\u5C11\u540D\u55AE\u8CC7\u6599\uFF0C\u4E0D\u80FD\u5132\u5B58\u3002");
-  node.textContent = serializeSnapshot(next);
-  return `<!DOCTYPE html>
-${clone.outerHTML}`;
+
+// src/lib/shared-list.ts
+var COLLECTION = "https://crudcrud.com/api/34059ce274684a03a15f65b6b51b0e81/mingpian";
+var SEEN_KEY = "mingpian.shared.seen";
+function stamp(card) {
+  const value = Date.parse(card.updatedAt || card.createdAt);
+  return Number.isNaN(value) ? 0 : value;
 }
-function downloadPack(cards, fileName = "Business Card Ledger.html") {
-  const html = buildPackHtml(cards);
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+function mergeLedgers(local, remote, seenIds) {
+  const seen = new Set(seenIds);
+  const localById = new Map(local.map((card) => [card.id, card]));
+  const merged = /* @__PURE__ */ new Map();
+  for (const card of remote) {
+    if (seen.has(card.id) && !localById.has(card.id)) continue;
+    const mine = localById.get(card.id);
+    if (!mine || stamp(mine) < stamp(card)) merged.set(card.id, card);
+    else merged.set(card.id, mine);
+  }
+  for (const card of local) {
+    if (!merged.has(card.id)) merged.set(card.id, card);
+  }
+  return [...merged.values()];
+}
+function ledgerSignature(cards) {
+  return JSON.stringify(
+    [...cards].map((card) => ({
+      id: card.id,
+      updatedAt: stamp(card),
+      fields: Object.fromEntries(FIELD_KEYS.map((key) => [key, card[key]]))
+    })).sort((a, b) => a.id.localeCompare(b.id))
+  );
+}
+function readSeenIds() {
+  if (typeof localStorage === "undefined") return [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SEEN_KEY) ?? "[]");
+    return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+function writeSeenIds(ids) {
+  localStorage.setItem(SEEN_KEY, JSON.stringify([...new Set(ids)]));
+}
+function parseSnapshots(value) {
+  if (!Array.isArray(value)) return [];
+  const snapshots = [];
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
+    const record = item;
+    if (typeof record._id !== "string") continue;
+    snapshots.push({ remoteId: record._id, cards: cardsFromUnknown(record.cards) });
+  }
+  return snapshots;
+}
+async function request(url, init) {
+  let lastError;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const response = await fetch(url, { ...init, cache: "no-store" });
+      if (response.status < 500) return response;
+      lastError = new Error(String(response.status));
+    } catch (error) {
+      lastError = error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+  }
+  throw lastError instanceof Error ? lastError : new Error("\u8B80\u4E0D\u5230\u5DF2\u5132\u5B58\u7684\u540D\u55AE\u3002");
+}
+async function fetchSharedLedger() {
+  const response = await request(COLLECTION);
+  if (!response.ok) throw new Error("\u8B80\u4E0D\u5230\u5DF2\u5132\u5B58\u7684\u540D\u55AE\u3002");
+  const snapshots = parseSnapshots(await response.json());
+  const byId = /* @__PURE__ */ new Map();
+  for (const card of snapshots.flatMap((snapshot) => snapshot.cards)) {
+    const previous = byId.get(card.id);
+    if (!previous || stamp(previous) < stamp(card)) byId.set(card.id, card);
+  }
+  return [...byId.values()];
+}
+async function writeSharedLedger(cards) {
+  const response = await request(COLLECTION);
+  if (!response.ok) throw new Error("\u8B80\u4E0D\u5230\u5DF2\u5132\u5B58\u7684\u540D\u55AE\u3002");
+  const snapshots = parseSnapshots(await response.json());
+  const body = JSON.stringify({ savedAt: (/* @__PURE__ */ new Date()).toISOString(), cards });
+  const headers = { "Content-Type": "application/json" };
+  if (snapshots[0]) {
+    const updated = await request(`${COLLECTION}/${snapshots[0].remoteId}`, { method: "PUT", headers, body });
+    if (!updated.ok) throw new Error("\u5132\u5B58\u6A94\u6848\u5931\u6557\u3002");
+    await Promise.all(
+      snapshots.slice(1).map((snapshot) => request(`${COLLECTION}/${snapshot.remoteId}`, { method: "DELETE" }))
+    );
+    return;
+  }
+  const created = await request(COLLECTION, { method: "POST", headers, body });
+  if (!created.ok) throw new Error("\u5132\u5B58\u6A94\u6848\u5931\u6557\u3002");
 }
 
 // src/components/ledger.tsx
@@ -56934,9 +57002,9 @@ function Ledger() {
   const [cards, setCards] = (0, import_react6.useState)(
     () => filePack ? choosePackCards(filePack, readFileDraft(filePack.fileId)).cards : loadCards()
   );
-  const [packBaseline, setPackBaseline] = (0, import_react6.useState)(
-    () => filePack ? JSON.stringify(filePack.cards) : null
-  );
+  const [savedCards, setSavedCards] = (0, import_react6.useState)(null);
+  const [saving, setSaving] = (0, import_react6.useState)(false);
+  const savingRef = (0, import_react6.useRef)(false);
   const [storageError, setStorageError] = (0, import_react6.useState)(null);
   const [draft, setDraft] = (0, import_react6.useState)(() => emptyDraft());
   const [keepContext, setKeepContext] = (0, import_react6.useState)(true);
@@ -56968,7 +57036,7 @@ function Ledger() {
       setStorageError(null);
     } catch {
       setStorageError(
-        filePack ? "\u9019\u90E8\u700F\u89BD\u5668\u7684\u66AB\u5B58\u7A7A\u9593\u5DF2\u6EFF\u3002\u8ACB\u5148\u6309\u5132\u5B58\u6A94\u6848\uFF0C\u628A\u540D\u55AE\u4E0B\u8F09\u56DE\u4F86\u3002" : "\u9019\u90E8\u700F\u89BD\u5668\u7684\u5132\u5B58\u7A7A\u9593\u5DF2\u6EFF\uFF0C\u6700\u65B0\u6539\u52D5\u53EF\u80FD\u6C92\u6709\u4FDD\u5B58\u3002\u8ACB\u5148\u532F\u51FA Excel\u3002"
+        "\u9019\u90E8\u700F\u89BD\u5668\u7684\u66AB\u5B58\u7A7A\u9593\u5DF2\u6EFF\u3002\u8ACB\u5148\u6309\u5132\u5B58\u6A94\u6848\uFF0C\u8B93\u5176\u4ED6\u88DD\u7F6E\u4E5F\u80FD\u770B\u5230\u540D\u55AE\u3002"
       );
     }
   }
@@ -56987,7 +57055,7 @@ function Ledger() {
     return [...values].sort((a, b) => a.localeCompare(b, "zh-Hant"));
   }, [cards, company]);
   const filtered = query.trim().length > 0 || category.length > 0 || company.length > 0;
-  const packDirty = filePack !== null && JSON.stringify(cards) !== packBaseline;
+  const sharedDirty = savedCards !== null && ledgerSignature(cards) !== ledgerSignature(savedCards);
   const paged = (0, import_react6.useMemo)(() => pageSlice(visible, page, LIST_PAGE_SIZE), [visible, page]);
   function addDrafts(incoming) {
     const existing = new Set(cards.map((card) => cardKey(card)));
@@ -57048,7 +57116,11 @@ function Ledger() {
       setEditError("\u5DF2\u6709\u53E6\u4E00\u5F35\u76F8\u540C\u96FB\u90F5\u3001\u59D3\u540D\u3001\u516C\u53F8\u548C\u65E5\u671F\u7684\u540D\u7247\u3002");
       return;
     }
-    commit(cards.map((card) => card.id === editing.id ? { ...card, ...result.draft } : card));
+    commit(
+      cards.map(
+        (card) => card.id === editing.id ? { ...card, ...result.draft, updatedAt: (/* @__PURE__ */ new Date()).toISOString() } : card
+      )
+    );
     setEditing(null);
     setListNotice({ tone: "ok", text: `\u5DF2\u66F4\u65B0${cardLabel(result.draft)}\u3002` });
   }
@@ -57106,16 +57178,53 @@ function Ledger() {
     setPage(next);
     listRef.current?.scrollIntoView({ block: "start" });
   }
-  function savePack() {
+  (0, import_react6.useEffect)(() => {
+    let cancelled = false;
+    async function pullShared() {
+      if (savingRef.current || cancelled) return;
+      try {
+        const remote = await fetchSharedLedger();
+        if (savingRef.current || cancelled) return;
+        const seen = readSeenIds();
+        setCards((local) => mergeLedgers(local, remote, seen));
+        writeSeenIds(remote.map((card) => card.id));
+        setSavedCards(remote);
+      } catch {
+        if (!cancelled) {
+          setListNotice({ tone: "warn", text: "\u66AB\u6642\u8B80\u4E0D\u5230\u5176\u4ED6\u88DD\u7F6E\u5132\u5B58\u7684\u540D\u55AE\u3002\u9019\u90E8\u88DD\u7F6E\u88E1\u7684\u540D\u7247\u4ECD\u5728\u3002" });
+        }
+      }
+    }
+    void pullShared();
+    function onVisible() {
+      if (document.visibilityState === "visible") void pullShared();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+  async function saveSharedList() {
+    savingRef.current = true;
+    setSaving(true);
+    setListNotice(null);
     try {
-      downloadPack(cards);
-      setPackBaseline(JSON.stringify(cards));
+      const remote = await fetchSharedLedger();
+      const merged = mergeLedgers(cards, remote, readSeenIds());
+      await writeSharedLedger(merged);
+      writeSeenIds(merged.map((card) => card.id));
+      commit(merged);
+      setSavedCards(merged);
       setListNotice({
         tone: "ok",
-        text: "\u5DF2\u4E0B\u8F09 Business Card Ledger.html\u3002\u8ACB\u7528\u5B83\u8986\u84CB\u516C\u53F8 drive \u4E0A\u7684\u820A\u6A94\uFF0C\u540C\u4E8B\u624D\u6703\u770B\u5230\u4ECA\u6B21\u4FEE\u6539\u3002"
+        text: "\u5DF2\u5132\u5B58\u3002\u96FB\u8166\u548C\u624B\u6A5F\u6253\u958B\u9019\u4EFD\u540D\u7247\u9304\uFF0C\u90FD\u6703\u770B\u5230\u5404\u88DD\u7F6E\u5132\u5B58\u7684\u540D\u55AE\u3002"
       });
     } catch {
       setListNotice({ tone: "error", text: "\u5132\u5B58\u6A94\u6848\u5931\u6557\u3002\u8ACB\u518D\u8A66\u4E00\u6B21\u3002" });
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
     }
   }
   function scanErrorMessage(error) {
@@ -57215,11 +57324,21 @@ function Ledger() {
       /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "sm:text-right", children: [
         /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("h1", { className: "text-2xl font-semibold tracking-tight text-white", children: "\u540D\u7247\u9304" }),
         /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "mt-1 max-w-xs text-sm leading-6 text-white sm:ml-auto", children: "Business Card Ledger" }),
-        filePack ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(Button3, { type: "button", variant: "outline", className: "mt-3 bg-white text-foreground", onClick: savePack, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Save, { "data-icon": "inline-start" }),
-          "\u5132\u5B58\u6A94\u6848"
-        ] }) : null,
-        filePack && packDirty ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "mt-2 max-w-xs text-sm leading-6 text-white sm:ml-auto", children: "\u6709\u4FEE\u6539\u9084\u6C92\u5BEB\u9032\u6A94\u6848\u3002\u4E0B\u8F09\u5F8C\u8ACB\u8986\u84CB drive \u4E0A\u7684\u820A\u6A94\u3002" }) : null
+        /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(
+          Button3,
+          {
+            type: "button",
+            variant: "outline",
+            className: "mt-3 bg-white text-foreground",
+            disabled: saving,
+            onClick: () => void saveSharedList(),
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Save, { "data-icon": "inline-start" }),
+              saving ? "\u6B63\u5728\u5132\u5B58\u2026" : "\u5132\u5B58\u6A94\u6848"
+            ]
+          }
+        ),
+        sharedDirty ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "mt-2 max-w-xs text-sm leading-6 text-white sm:ml-auto", children: "\u6709\u540D\u7247\u9084\u6C92\u5132\u5B58\u3002\u6309\u5132\u5B58\u6A94\u6848\u5F8C\uFF0C\u5176\u4ED6\u96FB\u8166\u548C\u624B\u6A5F\u624D\u6703\u770B\u5230\u3002" }) : null
       ] })
     ] }) }),
     /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("main", { className: "mx-auto grid max-w-6xl gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[24rem_minmax(0,1fr)] lg:items-start", children: [
