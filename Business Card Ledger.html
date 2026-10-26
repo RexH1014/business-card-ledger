@@ -56940,7 +56940,7 @@ function packLogoSrc() {
 }
 
 // src/lib/shared-list.ts
-var COLLECTION = "https://crudcrud.com/api/34059ce274684a03a15f65b6b51b0e81/mingpian";
+var COLLECTION = "https://crudcrud.com/api/9aed111ab68745cd9c984c4cc37b3889/mingpian";
 var SEEN_KEY = "mingpian.shared.seen";
 function stamp(card) {
   const value = Date.parse(card.updatedAt || card.createdAt);
@@ -57344,9 +57344,16 @@ function Ledger() {
         }
       }
     }
-    void pullShared();
+    let lastPull = 0;
+    async function pullIfDue() {
+      const now = Date.now();
+      if (now - lastPull < 8e3) return;
+      lastPull = now;
+      await pullShared();
+    }
+    void pullIfDue();
     function onVisible() {
-      if (document.visibilityState === "visible") void pullShared();
+      if (document.visibilityState === "visible") void pullIfDue();
     }
     document.addEventListener("visibilitychange", onVisible);
     return () => {
