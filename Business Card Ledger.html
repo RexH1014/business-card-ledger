@@ -57141,8 +57141,6 @@ function Ledger() {
   const [company, setCompany] = (0, import_react6.useState)("");
   const [page, setPage] = (0, import_react6.useState)(1);
   const listRef = (0, import_react6.useRef)(null);
-  const [sortKey, setSortKey] = (0, import_react6.useState)("date");
-  const [sortDir, setSortDir] = (0, import_react6.useState)("desc");
   const [listNotice, setListNotice] = (0, import_react6.useState)(null);
   const [editing, setEditing] = (0, import_react6.useState)(null);
   const [editDraft, setEditDraft] = (0, import_react6.useState)(null);
@@ -57189,8 +57187,8 @@ function Ledger() {
     }
   }
   const visible = (0, import_react6.useMemo)(
-    () => filterCards(cards, query, category, company, sortKey, sortDir),
-    [cards, query, category, company, sortKey, sortDir]
+    () => filterCards(cards, query, category, company, "date", "desc"),
+    [cards, query, category, company]
   );
   const categories = (0, import_react6.useMemo)(() => {
     const values = new Set(cards.map((card) => card.category).filter(Boolean));
@@ -57313,15 +57311,6 @@ function Ledger() {
       setBusy(null);
       if (fileRef.current) fileRef.current.value = "";
     }
-  }
-  function toggleSort(key) {
-    setPage(1);
-    if (sortKey === key) {
-      setSortDir((current) => current === "asc" ? "desc" : "asc");
-      return;
-    }
-    setSortKey(key);
-    setSortDir(key === "date" ? "desc" : "asc");
   }
   function showPage(next) {
     setPage(next);
@@ -57707,7 +57696,7 @@ function Ledger() {
             /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "mx-auto max-w-sm text-sm leading-6 text-muted-foreground", children: cards.length === 0 ? "\u5728\u5DE6\u908A\u586B\u597D\u4E00\u5F35\uFF0C\u6216\u5148\u653E\u5165\u4E09\u5F35\u793A\u7BC4\u770B\u770B\u540D\u55AE\u548C Excel \u9577\u4EC0\u9EBC\u6A23\u5B50\u3002" : "\u8A66\u8457\u6E05\u6389\u641C\u5C0B\uFF0C\u6216\u6539\u9078\u300C\u5168\u90E8\u985E\u5225\u300D\u548C\u300C\u5168\u90E8\u516C\u53F8\u300D\u3002" }),
             cards.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Button3, { type: "button", variant: "outline", onClick: loadSamples, children: "\u653E\u5165\u793A\u7BC4\u540D\u7247" }) }) : null
           ] }) : /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(import_jsx_runtime22.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("ul", { className: "grid gap-3 p-4 md:hidden", children: paged.items.map((card) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("li", { className: "rounded-lg border border-border bg-white/50 p-3", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("ul", { className: "grid gap-3 p-4", children: paged.items.map((card) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("li", { className: "rounded-lg border border-border bg-white/50 p-3", children: [
               /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex items-start justify-between gap-3", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "min-w-0", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "truncate text-base font-medium", children: cardLabel(card) }),
@@ -57748,36 +57737,7 @@ function Ledger() {
                 ] })
               ] })
             ] }, card.id)) }),
-            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("div", { className: "hidden overflow-x-auto md:block", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("table", { className: "w-max min-w-full border-collapse text-left text-sm", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("caption", { className: "sr-only", children: "\u540D\u7247\u540D\u55AE\uFF0C\u6B04\u4F4D\u8F03\u591A\u6642\u53EF\u5DE6\u53F3\u6ED1\u52D5" }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("tr", { className: "border-b border-border text-xs text-muted-foreground", children: [
-                MAIN_FIELDS.map((field) => {
-                  const active = sortKey === field.key;
-                  return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("th", { scope: "col", "aria-sort": active ? sortDir === "asc" ? "ascending" : "descending" : "none", className: "px-3 py-2 font-medium whitespace-nowrap", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("button", { type: "button", className: "inline-flex items-center gap-1 hover:text-foreground", onClick: () => toggleSort(field.key), children: [
-                    field.zh,
-                    /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { "aria-hidden": "true", children: active ? sortDir === "asc" ? "\u2191" : "\u2193" : "" })
-                  ] }) }, field.key);
-                }),
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("th", { scope: "col", className: "px-3 py-2 font-medium whitespace-nowrap", children: "\u5176\u4ED6\u4E8B\u9805" }),
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("th", { scope: "col", className: "sticky right-0 bg-card px-3 py-2 font-medium shadow-[-8px_0_8px_-8px_rgba(36,31,27,0.25)]", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "sr-only", children: "\u64CD\u4F5C" }) })
-              ] }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("tbody", { children: paged.items.map((card) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("tr", { className: "border-b border-border/80 align-top", children: [
-                MAIN_FIELDS.map((field) => /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
-                  "td",
-                  {
-                    className: field.key === "company" || field.key === "fullName" || field.key === "title" || field.key === "remarks" ? "max-w-64 min-w-28 px-3 py-2.5 whitespace-pre-wrap" : "px-3 py-2.5 whitespace-nowrap",
-                    children: field.key === "fullName" ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "font-medium", children: card.fullName || "\u2014" }) : field.key === "date" ? card.date ? formatSheetDate(card.date) : /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-muted-foreground", children: "\u2014" }) : card[field.key] || /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-muted-foreground", children: "\u2014" })
-                  },
-                  field.key
-                )),
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("td", { className: "max-w-64 min-w-28 px-3 py-2.5 whitespace-pre-wrap", children: otherMatterSummary(card) || /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("span", { className: "text-muted-foreground", children: "\u2014" }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("td", { className: "sticky right-0 bg-card px-3 py-2 shadow-[-8px_0_8px_-8px_rgba(36,31,27,0.25)]", children: /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex justify-end gap-1", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Button3, { type: "button", variant: "ghost", size: "icon-sm", "aria-label": `\u4FEE\u6539${cardLabel(card)}`, onClick: () => openEdit(card), children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Pencil, {}) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Button3, { type: "button", variant: "ghost", size: "icon-sm", "aria-label": `\u522A\u9664${cardLabel(card)}`, onClick: () => setPendingDelete(card), children: /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Trash, {}) })
-                ] }) })
-              ] }, card.id)) })
-            ] }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "hidden px-4 pt-2 text-xs text-muted-foreground md:block", children: "\u65E5\u66C6\u3001\u5229\u662F\u3001\u8056\u8A95\u5361\u548C\u4E2D\u79CB\u6B78\u5728\u300C\u5176\u4ED6\u4E8B\u9805\u300D\u3002Excel \u4ECD\u662F\u5341\u4E8C\u6B04\u3002" }),
+            /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("p", { className: "px-4 pt-2 text-xs text-muted-foreground", children: "\u65E5\u66C6\u3001\u5229\u662F\u3001\u8056\u8A95\u5361\u548C\u4E2D\u79CB\u6B78\u5728\u300C\u5176\u4ED6\u4E8B\u9805\u300D\u3002Excel \u4ECD\u662F\u5341\u4E8C\u6B04\u3002" }),
             paged.pages > 1 ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("nav", { "aria-label": "\u540D\u55AE\u5206\u9801", className: "flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3", children: [
               /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("p", { className: "text-sm text-muted-foreground", children: [
                 "\u7B2C ",
