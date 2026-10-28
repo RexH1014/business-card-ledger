@@ -57102,6 +57102,9 @@ function isUndoEntry(value) {
 
 // src/components/ledger.tsx
 var import_jsx_runtime22 = __toESM(require_jsx_runtime());
+function shown(value) {
+  return value.trim() || "-";
+}
 function pageMarks(current, pages) {
   if (pages <= 7) return Array.from({ length: pages }, (_, index) => index + 1);
   const start = Math.max(2, current - 1);
@@ -57704,28 +57707,16 @@ function Ledger() {
                 ] }),
                 card.category ? /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Badge, { variant: "secondary", children: card.category }) : null
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("dl", { className: "mt-3 grid gap-1 text-sm", children: [
-                card.contact ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-12 shrink-0 text-muted-foreground", children: "\u806F\u7D61" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { className: "min-w-0 break-all", children: card.contact })
-                ] }) : null,
-                card.email ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-12 shrink-0 text-muted-foreground", children: "\u96FB\u90F5" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { className: "min-w-0 break-all", children: card.email })
-                ] }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-12 shrink-0 text-muted-foreground", children: "\u65E5\u671F" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { children: card.date ? formatSheetDate(card.date) : "\u2014" })
-                ] }),
-                card.remarks ? /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-12 shrink-0 text-muted-foreground", children: "\u5099\u8A3B" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { className: "whitespace-pre-wrap", children: card.remarks })
-                ] }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-16 shrink-0 text-muted-foreground", children: "\u5176\u4ED6\u4E8B\u9805" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { children: otherMatterSummary(card) || "\u2014" })
-                ] })
-              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dl", { className: "mt-3 grid gap-1 text-sm", children: [
+                ["\u806F\u7D61", shown(card.contact)],
+                ["\u96FB\u90F5", shown(card.email)],
+                ["\u65E5\u671F", card.date ? formatSheetDate(card.date) : "-"],
+                ["\u5099\u8A3B", shown(card.remarks)],
+                ["\u5176\u4ED6\u4E8B\u9805", otherMatterSummary(card) || "-"]
+              ].map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "flex gap-2", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dt", { className: "w-16 shrink-0 text-muted-foreground", children: label }),
+                /* @__PURE__ */ (0, import_jsx_runtime22.jsx)("dd", { className: "min-w-0 whitespace-pre-wrap break-all", children: value })
+              ] }, label)) }),
               /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)("div", { className: "mt-auto flex gap-2 pt-3", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime22.jsxs)(Button3, { type: "button", variant: "outline", size: "sm", onClick: () => openEdit(card), children: [
                   /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(Pencil, { "data-icon": "inline-start" }),
